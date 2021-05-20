@@ -94,29 +94,67 @@ namespace MedidoresApp.Hilos
                 {
                     input = clienteSocket.Leer();
                 }
-                catch (Exception)
+                catch (NullReferenceException)
                 {
-
                     input = "";
                 }
                 
                 string[] frase = input.Split('|');
                 if (frase.Length == 6)
-                {                    
+                {
+                    int medidor;
+                    try
+                    {
+                        medidor = Int32.Parse((input.Split('|'))[0]);
+                    }
+                    catch (Exception)
+                    {
+                        medidor = 0;                       
+                    }
+                    string fecha;
+                    try
+                    {
+                        fecha = (input.Split('|'))[1];
+                    }
+                    catch (Exception)
+                    {
 
-                    int medidor = Int32.Parse((input.Split('|'))[0]);
+                        fecha = "";
+                    }
 
-                    string fecha = (input.Split('|'))[1];
+                    string tipo;
+                    try
+                    {
+                      tipo = (input.Split('|'))[2];
+                    }
+                    catch (Exception)
+                    {
+                        tipo = "";
+                      
+                    }                    
 
-                    string tipo = (input.Split('|'))[2];
-
-                    int valor = Int32.Parse((input.Split('|'))[3]);
-
-                    int estado = Int32.Parse((input.Split('|'))[4]);
+                    int valor;
+                    try
+                    {
+                      valor = Int32.Parse((input.Split('|'))[3]);
+                    }
+                    catch (Exception)
+                    {
+                        valor = -1;                       
+                    }
+                    int estado;
+                    try
+                    {
+                       estado = Int32.Parse((input.Split('|'))[4]);
+                    }
+                    catch (NullReferenceException)
+                    {
+                        estado = 6;
+                    }                   
 
                     string confirmar = (input.Split('|'))[5];
 
-                    if(confirmar != "UPDATE" || estado > -1 || estado > 2 || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
+                    if(confirmar != "UPDATE" || estado < -1 || estado > 2 || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
                     {
                         clienteSocket.Escribir( medidorV + "|ERROR");
                         clienteSocket.CerrarConexion();
@@ -169,12 +207,32 @@ namespace MedidoresApp.Hilos
                     }
                 }
                 else if (frase.Length == 5)
-                {                 
-                    int medidor = Int32.Parse((input.Split('|'))[0]);
+                {
+                    int medidor;
+                    try
+                    {
+                        medidor = Int32.Parse((input.Split('|'))[0]);
+                    }
+                    catch (Exception)
+                    {
+                        medidor = 0;
+                    }
+
                     string fecha = (input.Split('|'))[1];
+
                     string tipo = (input.Split('|'))[2];
-                    int valor = Int32.Parse((input.Split('|'))[3]);
+
+                    int valor;
+                    try
+                    {
+                        valor = Int32.Parse((input.Split('|'))[3]);
+                    }
+                    catch (Exception)
+                    {
+                        valor = -1;
+                    }
                     string confirmar = (input.Split('|'))[4];
+
                     if (confirmar != "UPDATE" || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
                     {
                         clienteSocket.Escribir(medidorV + "|ERROR");
@@ -209,7 +267,7 @@ namespace MedidoresApp.Hilos
                                 NroSerie = medidor,
                                 Fecha = fechaNew,
                                 Tipo = tipo,
-                                Valor = valor,
+                                Valor = valor
                             };
 
                             lock (dal)

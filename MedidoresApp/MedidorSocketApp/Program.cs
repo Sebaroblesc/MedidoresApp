@@ -27,7 +27,7 @@ namespace MedidorSocketApp
                 string comprobar = clienteSocket.Leer();                
                 if (comprobar.Contains("WAIT")){
                     Console.WriteLine("Número Medidor|Fecha|Tipo|Valor|Estado (opcional)|UPDATE");                    
-                    string input = Console.ReadLine();
+                    string input = Console.ReadLine().Trim();
                     clienteSocket.Escribir(input);
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine(clienteSocket.Leer());
@@ -43,7 +43,7 @@ namespace MedidorSocketApp
                 }
                 catch (NullReferenceException ex)
                 {
-
+                    Console.WriteLine("ERROR");
                 }
             }
             else
