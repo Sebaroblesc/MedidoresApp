@@ -34,7 +34,7 @@ namespace MedidoresModel.DAL
 
 
         public void RegistrarLecturaConsumo(Lectura l)
-        {
+        {            
             try
             {
                 List<Lectura> lecturas2 = JsonConvert.DeserializeObject<List<Lectura>>(File.ReadAllText(archivoConsumo));
@@ -43,12 +43,12 @@ namespace MedidoresModel.DAL
                 File.WriteAllText(archivoConsumo, json);
 
             }
-            catch (NullReferenceException ex)
+            catch (FileNotFoundException ex)
             {
                 string json = JsonConvert.SerializeObject(l, Formatting.Indented);
                 string json2 = "[" + json + "]";
                 File.WriteAllText(archivoConsumo, json2);
-            }
+            } 
         }
 
 
@@ -62,7 +62,7 @@ namespace MedidoresModel.DAL
                 File.WriteAllText(archivoTrafico, json);
 
             }
-            catch (NullReferenceException ex)
+            catch (FileNotFoundException ex)
             {
                 string json = JsonConvert.SerializeObject(l, Formatting.Indented);
                 string json2 = "[" + json + "]";
