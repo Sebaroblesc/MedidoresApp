@@ -28,15 +28,8 @@ namespace MedidoresApp.Hilos
 
             clienteSocket.Escribir("Ingresar: Fecha (aaaa-mm-dd-hh-mm-ss)|Numero Medidor (4 números)|Tipo (Consumo o Tráfico):");
             string prueba = clienteSocket.Leer();
-            string fechaV;
-            try
-            {
-                 fechaV = (prueba.Split('|'))[0];
-            }catch(Exception ex)
-            {
-                fechaV = "";
-            }
-            
+
+            string fechaV = (prueba.Split('|'))[0];            
 
             int medidorV;
             try
@@ -48,6 +41,7 @@ namespace MedidoresApp.Hilos
 
                 medidorV = 0;
             }
+
             string tipoV;
             try
             {
@@ -108,50 +102,23 @@ namespace MedidoresApp.Hilos
                 
                 string[] frase = input.Split('|');
                 if (frase.Length == 6)
-                {                     
-                    //List<string> errores = new List<string>();
+                {                    
+
                     int medidor = Int32.Parse((input.Split('|'))[0]);
-                    //if (medidorV != medidor)
-                    //{
-                    //    errores.Add("Codigo medidor no coincide.");
-                    //}
+
                     string fecha = (input.Split('|'))[1];
-                    //if (fecha != fechaV)
-                    //{
-                    //    errores.Add("Fecha no coincide.");
-                    //}
+
                     string tipo = (input.Split('|'))[2];
-                    //if (tipo != "consumo" && tipo != "trafico")
-                    //{
-                    //    errores.Add("Debe ser tipo consumo o trafico.");
-                    //}
+
                     int valor = Int32.Parse((input.Split('|'))[3]);
-                    //if (valor < 0 && valor > 1000)
-                    //{
-                    //    errores.Add("Valor debe ser entre 0 y 1000.");
-                    //}
+
                     int estado = Int32.Parse((input.Split('|'))[4]);
 
-                    //if (estado > -1 && estado > 2)
-                    //{
-                    //    errores.Add("Estado debe ser entre -1 y 2");
-                    //}
-
                     string confirmar = (input.Split('|'))[5];
-                    //if (confirmar != "UPDATE")
-                    //{
-                    //    errores.Add("Debe ingresar UPDATE para confirmar.");
-                    //}
 
-                    //if (errores.Count > 0)
-                    //{
-                    //    foreach (var error in errores)
-                    //    {                            
-                    //        clienteSocket.CerrarConexion();
-                    //    }
-                    //}
                     if(confirmar != "UPDATE" || estado > -1 || estado > 2 || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
                     {
+                        clienteSocket.Escribir( medidorV + "|ERROR");
                         clienteSocket.CerrarConexion();
                     }
                     else
@@ -169,7 +136,7 @@ namespace MedidoresApp.Hilos
 
                             lock (dal)
                             {
-                                //clienteSocket.Escribir(medidorV + "|OK");
+                                clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(medidorV + "|OK");
                                 Console.ResetColor();
@@ -191,7 +158,7 @@ namespace MedidoresApp.Hilos
                             lock (dal)
                             {
 
-                                //clienteSocket.Escribir(medidorV + "|OK");
+                                clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(medidorV + "|OK");
                                 Console.ResetColor();
@@ -202,45 +169,16 @@ namespace MedidoresApp.Hilos
                     }
                 }
                 else if (frase.Length == 5)
-                {
-                    List<string> errores = new List<string>();
+                {                 
                     int medidor = Int32.Parse((input.Split('|'))[0]);
-                    if (medidorV != medidor)
-                    {
-                        errores.Add("Codigo medidor no coincide.");
-                    }
-
                     string fecha = (input.Split('|'))[1];
-                    if (fecha != fechaV)
-                    {
-                        errores.Add("Fecha no coincide.");
-                    }
-
                     string tipo = (input.Split('|'))[2];
-                    if (tipo != "consumo" && tipo != "trafico")
-                    {
-                        errores.Add("Debe ser tipo consumo o trafico.");
-                    }
-
                     int valor = Int32.Parse((input.Split('|'))[3]);
-                    if (valor < 0 && valor > 1000)
-                    {
-                        errores.Add("Valor debe ser entre 0 y 1000.");
-                    }
-
                     string confirmar = (input.Split('|'))[4];
-                    if (confirmar != "UPDATE")
+                    if (confirmar != "UPDATE" || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
                     {
-                        errores.Add("Debe ingresar UPDATE para confirmar.");
-                    }
-
-                    if (errores.Count > 0)
-                    {
-                        foreach (var error in errores)
-                        {
-                            clienteSocket.Escribir(error);
-                            clienteSocket.CerrarConexion();
-                        }
+                        clienteSocket.Escribir(medidorV + "|ERROR");
+                        clienteSocket.CerrarConexion();
                     }
                     else
                     {
@@ -256,7 +194,7 @@ namespace MedidoresApp.Hilos
                             lock (dal)
 
                             {
-                                //clienteSocket.Escribir(medidorV + "|OK");
+                                clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(medidorV + "|OK");
                                 Console.ResetColor();
@@ -276,7 +214,7 @@ namespace MedidoresApp.Hilos
 
                             lock (dal)
                             {
-                                //clienteSocket.Escribir(medidorV + "|OK");
+                                clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(medidorV + "|OK");
                                 Console.ResetColor();
@@ -288,14 +226,14 @@ namespace MedidoresApp.Hilos
                 }
                 else
                 {
-                    //clienteSocket.Escribir(DateTime.Now + "|" + medidorV + "|" + "ERROR");
+                    clienteSocket.Escribir(DateTime.Now + "|" + medidorV + "|" + "ERROR");
                     Console.WriteLine(DateTime.Now + "|" + medidorV + "|" + "ERROR");
                     clienteSocket.CerrarConexion();
                 }
                 }
                 else
-                {                
-                //clienteSocket.Escribir("Error en solicitud. Cerrando Conexión");
+                {
+                clienteSocket.Escribir("Error en solicitud. Cerrando Conexión");
                 Console.WriteLine(DateTime.Now + "|" + medidorV + "|" + "ERROR");
                 clienteSocket.CerrarConexion();
             }

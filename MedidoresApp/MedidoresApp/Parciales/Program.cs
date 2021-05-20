@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MedidoresApp
@@ -13,7 +14,7 @@ namespace MedidoresApp
     {       
         private static ClienteSocket clienteSocket;
         private static ILecturaDAL dal = LecturaDALFactory.CreateDal();
-        private static IMedidorConsumoDAL dalConsumo = MedidorConsumoDALFactory.CreateDal();
+        private static IMedidorConsumoDAL dalConsumo = MedidorConsumoDALFactory.CreateDal();       
         
 
         static bool Menu()
@@ -137,8 +138,7 @@ namespace MedidoresApp
                     if (errores.Count > 0)
                     {
                         foreach (var error in errores)
-                        {
-                            clienteSocket.Escribir(error);
+                        {                           
                             clienteSocket.CerrarConexion();
                         }
                     }
@@ -158,7 +158,7 @@ namespace MedidoresApp
                             lock (dal)
                             {
                                 clienteSocket.Escribir("Lectura de Consumo registrada con exito.");
-                                dal.RegistrarLecturaConsumo(l);
+                                dal.RegistrarLecturaConsumo(l);                                
                                 clienteSocket.CerrarConexion();
                             }
                         }

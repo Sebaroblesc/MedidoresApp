@@ -24,28 +24,27 @@ namespace MedidorSocketApp
                 Console.WriteLine(clienteSocket.Leer());
                 string prueba = Console.ReadLine();
                 clienteSocket.Escribir(prueba);
-                string comprobar = clienteSocket.Leer();
+                string comprobar = clienteSocket.Leer();                
                 if (comprobar.Contains("WAIT")){
                     Console.WriteLine("Número Medidor|Fecha|Tipo|Valor|Estado (opcional)|UPDATE");                    
                     string input = Console.ReadLine();
                     clienteSocket.Escribir(input);
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    //Console.WriteLine(clienteSocket.Leer());
+                    Console.WriteLine(clienteSocket.Leer());
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Solicitud rechazada");
                 }
-                
-                //try
-                //{
-                //    Console.WriteLine(clienteSocket.Leer());
-                //}
-                //catch (NullReferenceException ex)
-                //{
+                try
+                {
+                    Console.WriteLine(clienteSocket.Leer());
+                }
+                catch (NullReferenceException ex)
+                {
 
-                //}
+                }
             }
             else
             {
