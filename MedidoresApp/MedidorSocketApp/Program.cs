@@ -30,7 +30,7 @@ namespace MedidorSocketApp
                     string input = Console.ReadLine();
                     clienteSocket.Escribir(input);
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine(clienteSocket.Leer());
+                    //Console.WriteLine(clienteSocket.Leer());
                 }
                 else
                 {
@@ -38,14 +38,14 @@ namespace MedidorSocketApp
                     Console.WriteLine("Solicitud rechazada");
                 }
                 
-                try
-                {
-                    Console.WriteLine(clienteSocket.Leer());
-                }
-                catch (NullReferenceException ex)
-                {
+                //try
+                //{
+                //    Console.WriteLine(clienteSocket.Leer());
+                //}
+                //catch (NullReferenceException ex)
+                //{
 
-                }
+                //}
             }
             else
             {

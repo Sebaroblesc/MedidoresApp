@@ -26,7 +26,7 @@ namespace MedidoresApp.Hilos
                 Console.WriteLine("Servidor Iniciado");
                 while (true)
                 {
-                    Console.WriteLine("Esperando Medidores...");
+                    Console.WriteLine("Recibiendo solicitud de Medidores");
                     ClienteSocket clienteSocket = server.ObtenerCliente();
                     HiloCliente hiloCliente = new HiloCliente(clienteSocket);
                     Thread t = new Thread(new ThreadStart(hiloCliente.Ejecutar));

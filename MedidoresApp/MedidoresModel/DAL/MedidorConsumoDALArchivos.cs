@@ -26,7 +26,7 @@ namespace MedidoresModel.DAL
 
         private static List<int> medidorConsumo = new List<int>()
         {
-            11,22,33,44,55
+            1111,2222,3333,4444,5555
         };
 
         public List<int> ObtenerMedidores()

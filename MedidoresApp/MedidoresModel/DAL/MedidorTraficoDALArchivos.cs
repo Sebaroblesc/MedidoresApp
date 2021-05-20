@@ -25,7 +25,7 @@ namespace MedidoresModel.DAL
 
         private static List<int> medidorTrafico = new List<int>()
         {
-            66,77,88,99,00
+            6666,7777,8888,9999,0000
         };
 
         public List<int> ObtenerMedidores()

@@ -20,15 +20,16 @@ namespace MedidoresApp
         {
             bool continuar = true;
             Console.WriteLine("Ingrese opcion del menu:");
+            Console.WriteLine("1. Mostrar Lecturas de Trafico.");
+            Console.WriteLine("2. Mostrar Lecturas de Consumo.");            
             string opcion = Console.ReadLine().Trim();
             switch (opcion)
             {
                 case "1":
-                    IngresarLectura();
+                    MostrarLecturasTrafico();
                     break;
                 case "2":
-                    
-                    MostrarLecturas();
+                    MostrarLecturasConsumo();
                     break;
                 case "0":
                     continuar = false;
@@ -40,9 +41,30 @@ namespace MedidoresApp
             return continuar;
         }
 
-        private static void MostrarLecturas()
+        private static void MostrarLecturasTrafico()
         {
-           dal.GetLecturas();
+            try
+            {
+                dal.ObtenerLecturasTrafico();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("No existen registros en el sistema.");
+            }
+           
+        }
+
+        private static void MostrarLecturasConsumo()
+        {
+            try
+            {
+                dal.ObtenerLecturasConsumo();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("No existen registros en el sistema.");
+            }
+
         }
 
         private static void IngresarLectura()

@@ -26,10 +26,17 @@ namespace MedidoresApp.Hilos
         {
             bool verificado = false;
 
-            clienteSocket.Escribir("fecha|nromedidor|tipo");
+            clienteSocket.Escribir("Ingresar: Fecha (aaaa-mm-dd-hh-mm-ss)|Numero Medidor (4 números)|Tipo (Consumo o Tráfico):");
             string prueba = clienteSocket.Leer();
-
-            string fechaV = (prueba.Split('|'))[0];
+            string fechaV;
+            try
+            {
+                 fechaV = (prueba.Split('|'))[0];
+            }catch(Exception ex)
+            {
+                fechaV = "";
+            }
+            
 
             int medidorV;
             try
@@ -101,52 +108,51 @@ namespace MedidoresApp.Hilos
                 
                 string[] frase = input.Split('|');
                 if (frase.Length == 6)
-                {
-                    List<string> errores = new List<string>();
-
+                {                     
+                    //List<string> errores = new List<string>();
                     int medidor = Int32.Parse((input.Split('|'))[0]);
-                    if (medidorV != medidor)
-                    {
-                        errores.Add("Codigo medidor no coincide.");
-                    }
-
+                    //if (medidorV != medidor)
+                    //{
+                    //    errores.Add("Codigo medidor no coincide.");
+                    //}
                     string fecha = (input.Split('|'))[1];
-                    if (fecha != fechaV)
-                    {
-                        errores.Add("Fecha no coincide.");
-                    }
-
+                    //if (fecha != fechaV)
+                    //{
+                    //    errores.Add("Fecha no coincide.");
+                    //}
                     string tipo = (input.Split('|'))[2];
-                    if (tipo != "consumo" && tipo != "trafico")
-                    {
-                        errores.Add("Debe ser tipo consumo o trafico.");
-                    }
-
+                    //if (tipo != "consumo" && tipo != "trafico")
+                    //{
+                    //    errores.Add("Debe ser tipo consumo o trafico.");
+                    //}
                     int valor = Int32.Parse((input.Split('|'))[3]);
-                    if (valor < 0 && valor > 1000)
-                    {
-                        errores.Add("Valor debe ser entre 0 y 1000.");
-                    }
+                    //if (valor < 0 && valor > 1000)
+                    //{
+                    //    errores.Add("Valor debe ser entre 0 y 1000.");
+                    //}
                     int estado = Int32.Parse((input.Split('|'))[4]);
 
-                    if (estado > -1 && estado > 2)
-                    {
-                        errores.Add("Estado debe ser entre -1 y 2");
-                    }
+                    //if (estado > -1 && estado > 2)
+                    //{
+                    //    errores.Add("Estado debe ser entre -1 y 2");
+                    //}
 
                     string confirmar = (input.Split('|'))[5];
-                    if (confirmar != "UPDATE")
-                    {
-                        errores.Add("Debe ingresar UPDATE para confirmar.");
-                    }
+                    //if (confirmar != "UPDATE")
+                    //{
+                    //    errores.Add("Debe ingresar UPDATE para confirmar.");
+                    //}
 
-                    if (errores.Count > 0)
+                    //if (errores.Count > 0)
+                    //{
+                    //    foreach (var error in errores)
+                    //    {                            
+                    //        clienteSocket.CerrarConexion();
+                    //    }
+                    //}
+                    if(confirmar != "UPDATE" || estado > -1 || estado > 2 || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
                     {
-                        foreach (var error in errores)
-                        {
-                            clienteSocket.Escribir(error);
-                            //clienteSocket.CerrarConexion();
-                        }
+                        clienteSocket.CerrarConexion();
                     }
                     else
                     {
@@ -163,12 +169,12 @@ namespace MedidoresApp.Hilos
 
                             lock (dal)
                             {
-                                clienteSocket.Escribir("Lectura de Consumo registrada con exito.");
+                                //clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine("Lectura de consumo registrada con exito.");
+                                Console.WriteLine(medidorV + "|OK");
                                 Console.ResetColor();
                                 dal.RegistrarLecturaConsumo(l);
-                                //clienteSocket.CerrarConexion();
+                                clienteSocket.CerrarConexion();
                             }
                         }
                         else if (tipo == "trafico")
@@ -185,12 +191,12 @@ namespace MedidoresApp.Hilos
                             lock (dal)
                             {
 
-                                clienteSocket.Escribir("Lectura de trafico registrada con exito.");
+                                //clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine("Lectura de trafico registrada con exito.");
+                                Console.WriteLine(medidorV + "|OK");
                                 Console.ResetColor();
                                 dal.RegistrarLecturaTrafico(l);
-                                //clienteSocket.CerrarConexion();
+                                clienteSocket.CerrarConexion();
                             }
                         }
                     }
@@ -233,7 +239,7 @@ namespace MedidoresApp.Hilos
                         foreach (var error in errores)
                         {
                             clienteSocket.Escribir(error);
-                            //clienteSocket.CerrarConexion();
+                            clienteSocket.CerrarConexion();
                         }
                     }
                     else
@@ -250,11 +256,12 @@ namespace MedidoresApp.Hilos
                             lock (dal)
 
                             {
-                                clienteSocket.Escribir("Lectura de Consumo registrada con exito.");
+                                //clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine("Lectura de consumo registrada con exito.");
+                                Console.WriteLine(medidorV + "|OK");
+                                Console.ResetColor();
                                 dal.RegistrarLecturaConsumo(l);
-                                //clienteSocket.CerrarConexion();
+                                clienteSocket.CerrarConexion();
                             }
                         }
                         else if (tipo == "trafico")
@@ -269,27 +276,29 @@ namespace MedidoresApp.Hilos
 
                             lock (dal)
                             {
-                                clienteSocket.Escribir("Lectura de trafico registrada con exito.");
+                                //clienteSocket.Escribir(medidorV + "|OK");
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine("Lectura de trafico registrada con exito.");
+                                Console.WriteLine(medidorV + "|OK");
                                 Console.ResetColor();
                                 dal.RegistrarLecturaTrafico(l);
-                                //clienteSocket.CerrarConexion();
+                                clienteSocket.CerrarConexion();
                             }
                         }
                     }
                 }
                 else
                 {
-                    clienteSocket.Escribir(DateTime.UtcNow + "|" + medidorV + "|" + "ERROR");
-                    //clienteSocket.CerrarConexion();
+                    //clienteSocket.Escribir(DateTime.Now + "|" + medidorV + "|" + "ERROR");
+                    Console.WriteLine(DateTime.Now + "|" + medidorV + "|" + "ERROR");
+                    clienteSocket.CerrarConexion();
                 }
                 }
                 else
                 {                
-                clienteSocket.Escribir("Error en solicitud. Cerrando Conexión");
-                    //clienteSocket.CerrarConexion();
-                }
+                //clienteSocket.Escribir("Error en solicitud. Cerrando Conexión");
+                Console.WriteLine(DateTime.Now + "|" + medidorV + "|" + "ERROR");
+                clienteSocket.CerrarConexion();
+            }
             }
         }
     }

@@ -70,7 +70,7 @@ namespace MedidoresModel.DAL
             }
         }
 
-        public List<Lectura> GetLecturas()
+        public List<Lectura> ObtenerLecturasConsumo()
         {
 
             List<Lectura> lecturas2 = JsonConvert.DeserializeObject<List<Lectura>>(File.ReadAllText(archivoConsumo),
@@ -87,7 +87,23 @@ namespace MedidoresModel.DAL
             }
             return lecturas2;
         }
-        
-    }
 
-}
+        public List<Lectura> ObtenerLecturasTrafico()
+        {
+         
+                List<Lectura> lecturas2 = JsonConvert.DeserializeObject<List<Lectura>>(File.ReadAllText(archivoTrafico),
+                new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
+
+                foreach (var l in lecturas2)
+                {
+                    Console.WriteLine("Numero de Serie: " + l.NroSerie);
+                    Console.WriteLine("Fecha: " + l.Fecha);
+                    Console.WriteLine("Tipo: " + l.Tipo);
+                    Console.WriteLine("Valor: " + l.Valor);
+                    Console.WriteLine("Estado: " + l.Estado);
+                    Console.WriteLine(" ");
+                }
+                return lecturas2;
+            }            
+        }
+    }

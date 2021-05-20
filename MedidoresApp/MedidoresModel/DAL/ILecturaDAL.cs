@@ -11,6 +11,7 @@ namespace MedidoresModel.DAL
     {
         void RegistrarLecturaTrafico(Lectura l);
         void RegistrarLecturaConsumo(Lectura l);
-        List<Lectura> GetLecturas();
+        List<Lectura> ObtenerLecturasTrafico();
+        List<Lectura> ObtenerLecturasConsumo();
     }
 }
