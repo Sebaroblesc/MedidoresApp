@@ -3,6 +3,7 @@ using MedidoresModel.DTO;
 using SocketUtils;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -22,7 +23,9 @@ namespace MedidoresApp
             bool continuar = true;
             Console.WriteLine("Ingrese opcion del menu:");
             Console.WriteLine("1. Mostrar Lecturas de Trafico.");
-            Console.WriteLine("2. Mostrar Lecturas de Consumo.");            
+            Console.WriteLine("2. Mostrar Lecturas de Consumo."); 
+            Console.WriteLine("3. Cambiar Puerto de Comunicación."); 
+            
             string opcion = Console.ReadLine().Trim();
             switch (opcion)
             {
@@ -32,6 +35,9 @@ namespace MedidoresApp
                 case "2":
                     MostrarLecturasConsumo();
                     break;
+                case "3":
+                    CambiarPuerto();
+                    break;
                 case "0":
                     continuar = false;
                     break;
@@ -40,6 +46,17 @@ namespace MedidoresApp
                     break;
             }
             return continuar;
+        }
+
+        private static void CambiarPuerto()
+        {
+            Console.WriteLine("Puerto de comunicación actual: " + ConfigurationManager.AppSettings["puerto"]);
+            Console.WriteLine("Ingresar nuevo Puerto de Comunicación:");
+            string nuevoPuerto = Console.ReadLine();
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings["puerto"].Value = nuevoPuerto;
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
         private static void MostrarLecturasTrafico()
