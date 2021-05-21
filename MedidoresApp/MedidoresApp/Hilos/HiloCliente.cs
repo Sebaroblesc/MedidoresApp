@@ -28,8 +28,16 @@ namespace MedidoresApp.Hilos
 
             clienteSocket.Escribir("Ingresar: Fecha (aaaa-mm-dd-hh-mm-ss)|Numero Medidor (4 números)|Tipo (Consumo o Tráfico):");
             string prueba = clienteSocket.Leer();
+            string fechaV;
+            try
+            {
+                fechaV = (prueba.Split('|'))[0];
+            }
+            catch (Exception)
+            {
+                fechaV = "";
+            }
 
-            string fechaV = (prueba.Split('|'))[0];            
 
             int medidorV;
             try
@@ -51,7 +59,7 @@ namespace MedidoresApp.Hilos
             {
                 tipoV = "";
             }
-            
+
 
             DateTime fechaNew;
             try
@@ -62,11 +70,11 @@ namespace MedidoresApp.Hilos
             catch (Exception)
             {
                 fechaNew = new DateTime(2021, 01, 01, 00, 00, 00);
-            }              
-            
+            }
+
             TimeSpan intervalo = DateTime.Now - fechaNew;
-            
-            if(tipoV == "consumo")
+
+            if (tipoV == "consumo")
             {
                 foreach (var medidor in dalConsumo.ObtenerMedidores())
                 {
@@ -76,7 +84,7 @@ namespace MedidoresApp.Hilos
                     }
                 }
             }
-            else if(tipoV == "trafico")
+            else if (tipoV == "trafico")
             {
                 foreach (var medidor in dalTrafico.ObtenerMedidores())
                 {
@@ -94,12 +102,22 @@ namespace MedidoresApp.Hilos
                 {
                     input = clienteSocket.Leer();
                 }
-                catch (NullReferenceException)
+                catch (Exception)
                 {
-                    input = "";
+                    input = "a";
                 }
-                
-                string[] frase = input.Split('|');
+
+                string[] frase;
+                try
+                {
+                    frase = input.Split('|');
+                }
+                catch (Exception)
+                {
+                    input = "a|a|a|a|a|a";
+                    frase = input.Split('|');
+                }
+
                 if (frase.Length == 6)
                 {
                     int medidor;
@@ -109,7 +127,7 @@ namespace MedidoresApp.Hilos
                     }
                     catch (Exception)
                     {
-                        medidor = 0;                       
+                        medidor = 0;
                     }
                     string fecha;
                     try
@@ -125,38 +143,48 @@ namespace MedidoresApp.Hilos
                     string tipo;
                     try
                     {
-                      tipo = (input.Split('|'))[2];
+                        tipo = (input.Split('|'))[2];
                     }
                     catch (Exception)
                     {
                         tipo = "";
-                      
-                    }                    
+
+                    }
 
                     int valor;
                     try
                     {
-                      valor = Int32.Parse((input.Split('|'))[3]);
+                        valor = Int32.Parse((input.Split('|'))[3]);
                     }
                     catch (Exception)
                     {
-                        valor = -1;                       
+                        valor = -1;
                     }
                     int estado;
                     try
                     {
-                       estado = Int32.Parse((input.Split('|'))[4]);
+                        estado = Int32.Parse((input.Split('|'))[4]);
                     }
-                    catch (NullReferenceException)
+                    catch (Exception)
                     {
                         estado = 6;
-                    }                   
+                    }
 
-                    string confirmar = (input.Split('|'))[5];
-
-                    if(confirmar != "UPDATE" || estado < -1 || estado > 2 || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
+                    string confirmar;
+                    try
                     {
-                        clienteSocket.Escribir( medidorV + "|ERROR");
+                        confirmar = (input.Split('|'))[5];
+                    }
+                    catch (Exception)
+                    {
+
+                        confirmar = "";
+                    }
+
+
+                    if (confirmar != "UPDATE" || estado < -1 || estado > 2 || valor < 0 || valor > 1000 || fecha != fechaV || medidorV != medidor)
+                    {
+                        clienteSocket.Escribir(medidorV + "|ERROR");
                         clienteSocket.CerrarConexion();
                     }
                     else
@@ -169,7 +197,7 @@ namespace MedidoresApp.Hilos
                                 Fecha = fechaNew,
                                 Tipo = tipo,
                                 Valor = valor,
-                                Estado = estado                            
+                                Estado = estado
                             };
 
                             lock (dal)
@@ -288,15 +316,15 @@ namespace MedidoresApp.Hilos
                     Console.WriteLine(DateTime.Now + "|" + medidorV + "|" + "ERROR");
                     clienteSocket.CerrarConexion();
                 }
-                }
-                else
-                {
+            }
+            else
+            {
                 clienteSocket.Escribir("Error en solicitud. Cerrando Conexión");
                 Console.WriteLine(DateTime.Now + "|" + medidorV + "|" + "ERROR");
                 clienteSocket.CerrarConexion();
             }
-            }
         }
     }
+}
 
 
